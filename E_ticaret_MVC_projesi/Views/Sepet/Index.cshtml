@@ -1,0 +1,86 @@
+﻿@model E_ticaret_MVC_projesi.Models.Sepet
+
+@{
+    Layout = null;
+}
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/jquery")
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <script>
+        $(document).on('click', '.number-spinner button', function () {
+            var btn = $(this),
+                oldValue = btn.closest('.number-spinner').find('input').val().trim(),
+                newVal = 0;
+
+            if (btn.attr('data-dir') == 'up') {
+                newVal = parseInt(oldValue) + 1;
+            } else {
+                if (oldValue > 1) {
+                    newVal = parseInt(oldValue) - 1;
+                } else {
+                    newVal = 1;
+                }
+            }
+            btn.closest('.number-spinner').find('input').val(newVal);
+        });
+    </script>
+</head>
+<body>
+    @ViewBag.msj
+    <table class="table">
+        <tr>
+            <th>Resim</th>
+            <th>Ürün Adı</th>
+            <th>Adet</th>
+            <th>Fiyat</th>
+            <th>Toplam</th>
+            <th>Sepetten Çıkar</th>
+        </tr>
+
+        @foreach (var item in Model.Sepetim)
+        {
+            <tr>
+                <td><img src="~/urun_resimleri/@item.urun.resim" height="80" width="80"></td>
+                <td>@item.urun.urunadi  </td>
+                <td>
+                    @*@item.adet*@
+                    @using (Html.BeginForm("sepete_ekle", "sepet"))
+                    {
+                        <div class="input-group number-spinner">
+                            <span class="input-group-btn">
+                                <button name="urunid" class="btn btn-default" value="@item.urun.urunid" data-dir="dwn" onclick="'this.form.submit()'">-</button>
+                            </span>
+
+                            <input name="adet" type="text" class="form-control text-center" value="@item.adet">
+
+                            <span class="input-group-btn">
+                                <button name="urunid" class="btn btn-default" value="@item.urun.urunid" data-dir="up" onclick="'this.form.submit()'">+</button>
+                            </span>
+                        </div>
+                    }
+
+                </td>
+                <td>@item.urun.fiyat </td>
+                <td>@(item.urun.fiyat*item.adet) </td>
+                <td>
+                    @Html.ActionLink("SİL", "sepetten_sil", new { urunid = item.urun.urunid }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+        <tr><td colspan="6" align="right"><b>Sepet Toplami=</b> @Model.Sepet_toplami() TL</td></tr>
+        <tr>
+            <td colspan="6" align="right">
+                @Html.ActionLink("SATIN AL","siparis_gec","Siparisler",null,new { @class = "btn btn-success" })
+                @Html.ActionLink("TEMİZLE", "sepeti_temizle", null, new { @class = "btn btn-primary" })
+
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

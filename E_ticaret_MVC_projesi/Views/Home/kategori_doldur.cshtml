@@ -1,0 +1,9 @@
+﻿@model IEnumerable<E_ticaret_MVC_projesi.Models.kategoriler>
+
+
+@foreach (var item in Model)
+{
+    <li><a class="dropdown-item" href="@Url.Action("urun_goster","urunler",new { kateno=item.kateno})">@item.kateadi </a></li>
+}
+
+

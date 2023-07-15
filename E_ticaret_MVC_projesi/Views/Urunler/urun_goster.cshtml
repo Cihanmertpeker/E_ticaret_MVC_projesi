@@ -1,0 +1,104 @@
+﻿@using PagedList
+@using PagedList.Mvc;
+@model IPagedList<E_ticaret_MVC_projesi.Models.urunler>
+
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/jquery")
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <link rel="stylesheet" href="~/Content/lightbox.css" type="text/css" media="screen" />
+
+    <script src="~/Scripts/prototype.js" type="text/javascript"></script>
+    <script src="~/Scripts/scriptaculous.js?load=effects,builder" type="text/javascript"></script>
+    <script src="~/Scripts/lightbox.js" type="text/javascript"></script>
+
+    <meta name="viewport" content="width=device-width" />
+    <title>urun_goster</title>
+    <style>
+        .resim_secici {
+            height: 150px;
+            width: 150px;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 10px;
+            border-color: lightgray;
+        }
+
+            .resim_secici img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+                border-radius: 10px;
+            }
+    </style>
+
+
+
+</head>
+<body>
+   @{ int sayac = 0;}
+    <table class="table" align="center">
+
+        <tr>
+            @foreach (var item in Model)
+            {
+                if (sayac != 4)//4 olana kadar yani ilk dört ürün
+                {
+            <td align="center">
+                <div class="resim_secici">
+                    <a href="~/urun_resimleri/@item.resim" rel="lightbox" title="@item.resim" >
+                        <img src="~/urun_resimleri/@item.resim"  />
+                    </a>
+                    
+                    
+                    </div><br />
+                Adı: @Html.DisplayFor(modelItem => item.urunadi)<br />
+
+                Fiyatı: @Html.DisplayFor(modelItem => item.fiyat)<br />
+
+                Açıklama: @Html.DisplayFor(modelItem => item.aciklama)<br />
+                @* @Html.ActionLink("+Sepete", "sepete_ekle", "sepet", new { urunid = item.urunid }, new { @class = "btn btn-success" })*@
+                <a href="@Url.Action("sepete_ekle","sepet",new { urunid = item.urunid })" class="btn btn-success"
+                  onclick="return GB_showCenter('Sepetiniz',this.href,500,800)">+Sepete</a>
+            </td>
+                    sayac++;
+                }
+                if (sayac == 4) { break; }
+            }
+
+        </tr>
+        @{
+            int kateno = ViewBag.kateno; 
+     sayac = 1;}
+
+
+        <tr>
+            @foreach (var item in Model)
+            {
+                if (sayac > 4)
+                {
+            <td align="center">
+                <div class="resim_secici"><img src="~/urun_resimleri/@item.resim" /></div><br />
+                Adı: @Html.DisplayFor(modelItem => item.urunadi)<br />
+
+                Fiyatı: @Html.DisplayFor(modelItem => item.fiyat)<br />
+
+                Açıklama: @Html.DisplayFor(modelItem => item.aciklama)<br />
+                @* @Html.ActionLink("+Sepete", "sepete_ekle", "sepet", new { urunid = item.urunid }, new { @class = "btn btn-success" })*@
+              <a href="@Url.Action("sepete_ekle","sepet",new { urunid = item.urunid })" class="btn btn-success" 
+                 onclick="return GB_showCenter('Sepetiniz',this.href,500,800)">+Sepete</a> 
+            </td>
+
+                }
+                sayac++;
+            }
+       
+        </tr>
+
+        <tr><td colspan="6">@Html.PagedListPager(Model, sayfa => Url.Action("urun_goster", new { sayfa,kateno })) </td> </tr>
+    </table>
+</body>
+</html>

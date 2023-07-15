@@ -1,0 +1,84 @@
+﻿@using PagedList
+@using PagedList.Mvc;
+@model IPagedList<E_ticaret_MVC_projesi.Models.urunler>
+
+@{
+    Layout = null;
+}
+@Styles.Render("~/Content/css")
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>urun_goster</title>
+    <style>
+        .resim_secici{
+            height:150px;
+            width:150px;
+            border-style:solid;
+            border-width:1px;
+            border-radius:10px;
+            border-color:lightgray;
+        }
+        .resim_secici img
+        {
+            height:100%;
+            width :100%;
+            object-fit:cover;
+            border-radius:10px;
+        }
+    </style>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Yeni Ürün", "urun_kaydet",null, new {@class = "btn btn-success" })
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                Ürün Adı
+            </th>
+            <th>
+                Fiyat
+            </th>
+            <th>
+                Açıklama
+            </th>
+            <th>
+                Resim
+            </th>
+            <th>
+                Kategori Adı
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.urunadi)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fiyat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.aciklama)
+                </td>
+                <td>
+                    <div class="resim_secici"><img src="~/urun_resimleri/@item.resim" /></div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.kategoriler.kateadi)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.urunid },new{@class="btn btn-primary" }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.urunid },new {@class = "btn btn-danger"})
+                </td>
+            </tr>
+        }
+        <tr><td colspan="6">@Html.PagedListPager(Model,sayfa=>Url.Action("urun_goster",new { sayfa })) </td> </tr>
+    </table>
+</body>
+</html>
